@@ -65,7 +65,7 @@ if __name__ == "__main__":
 
         if path:
             # Optionally shortcut the path
-            do_shortcutting = False
+            do_shortcutting = True
             if do_shortcutting:
                 path = shortcut_path(model, collision_model, path)
 
