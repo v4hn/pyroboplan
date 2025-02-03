@@ -48,13 +48,13 @@ if __name__ == "__main__":
 
     # Configure the RRT planner
     options = RRTPlannerOptions(
-        max_step_size=0.05,
+        max_step_size=0.025,
         max_connection_dist=0.5,
-        rrt_connect=False,
-        bidirectional_rrt=False,
+        rrt_connect=True,
+        bidirectional_rrt=True,
         rrt_star=False,
         max_rewire_dist=3.0,
-        max_planning_time=10.0,
+        max_planning_time=3.0,
         rng_seed=None,
         fast_return=True,
         goal_biasing_probability=0.15,
