@@ -402,6 +402,7 @@ class RRTPlanner:
         tree_name="rrt",
         show_path=True,
         show_tree=False,
+        show_nodes=False,
     ):
         """
         Visualizes the RRT path.
@@ -433,34 +434,36 @@ class RRTPlanner:
             )
 
         if show_tree:
-            start_path_tforms = []
-            for edge in self.start_tree.edges:
-                q_path = discretize_joint_space_path(
-                    [edge.nodeA.q, edge.nodeB.q], self.options.max_step_size
-                )
-                start_path_tforms.append(
-                    extract_cartesian_poses(self.model, frame_name, q_path)
-                )
-            visualize_paths(
-                visualizer,
-                f"{tree_name}_start/edges",
-                start_path_tforms,
-                line_width=0.5,
-                line_color=[0.9, 0.0, 0.9],
-            )
+            tree_line_width = 3.0
 
-            goal_path_tforms = []
-            for edge in self.goal_tree.edges:
-                q_path = discretize_joint_space_path(
-                    [edge.nodeA.q, edge.nodeB.q], self.options.max_step_size
+            def visualize_tree(tree, tree_name, color):
+                visualizer.viewer[f"{tree_name}"].delete()
+                path_tforms = []
+                for edge in tree.edges:
+                    q_path = discretize_joint_space_path(
+                        [edge.nodeA.q, edge.nodeB.q], self.options.max_step_size
+                    )
+                    path_tforms.append(
+                        extract_cartesian_poses(self.model, frame_name, q_path)
+                    )
+                visualize_paths(
+                    visualizer,
+                    f"{tree_name}/edges",
+                    path_tforms,
+                    line_width=tree_line_width,
+                    line_color=color,
                 )
-                goal_path_tforms.append(
-                    extract_cartesian_poses(self.model, frame_name, q_path)
-                )
-            visualize_paths(
-                visualizer,
-                f"{tree_name}_goal/edges",
-                goal_path_tforms,
-                line_width=0.5,
-                line_color=[0.0, 0.9, 0.9],
-            )
+
+                if show_nodes:
+                    nodes = [node.q for node in tree.nodes]
+                    nodes = extract_cartesian_poses(self.model, frame_name, nodes)
+                    visualize_frames(
+                        visualizer,
+                        f"{tree_name}/nodes",
+                        nodes,
+                        line_length=0.05,
+                        line_width=2.0,
+                    )
+
+            visualize_tree(self.start_tree, f"{tree_name}_start", [0.9, 0.0, 0.9])
+            visualize_tree(self.goal_tree, f"{tree_name}_goal", [0.0, 0.9, 0.9])

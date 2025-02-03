@@ -68,7 +68,9 @@ if __name__ == "__main__":
         # Search for a path
         planner = RRTPlanner(model, collision_model, options=options)
         path = planner.plan(q_start, q_end)
-        planner.visualize(viz, "panda_hand", show_tree=True, show_path=False)
+        planner.visualize(
+            viz, "panda_hand", show_tree=True, show_path=False, show_nodes=True
+        )
 
         if path:
             # Optionally shortcut the path
@@ -87,7 +89,7 @@ if __name__ == "__main__":
                 "shortened_path",
                 target_tforms,
                 line_length=0.05,
-                line_width=1.5,
+                line_width=2.5,
             )
 
             input("Press 'Enter' to plan another path, or ctrl-c to quit.")
