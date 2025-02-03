@@ -4,6 +4,8 @@ Rapidly-Exploring Random Tree (RRT) algorithm on a 7-DOF Panda robot.
 """
 
 from pinocchio.visualize import MeshcatVisualizer
+import numpy as np
+from math import tau
 import time
 
 from pyroboplan.core.utils import (
@@ -14,6 +16,7 @@ from pyroboplan.models.panda import (
     load_models,
     add_self_collisions,
     add_object_collisions,
+    setup_my_scene,
 )
 from pyroboplan.planning.path_shortcutting import shortcut_path
 from pyroboplan.planning.rrt import RRTPlanner, RRTPlannerOptions
@@ -25,19 +28,23 @@ if __name__ == "__main__":
     # Create models and data
     model, collision_model, visual_model = load_models()
     add_self_collisions(model, collision_model)
-    add_object_collisions(model, collision_model, visual_model)
+    setup_my_scene(model, collision_model, visual_model)
 
     data = model.createData()
     collision_data = collision_model.createData()
 
     # Initialize visualizer
     viz = MeshcatVisualizer(model, collision_model, visual_model, data=data)
-    viz.initViewer(open=True)
+    viz.initViewer(open=False)
     viz.loadViewerModel()
 
     # Define the start and end configurations
     q_start = get_random_collision_free_state(model, collision_model)
-    q_end = get_random_collision_free_state(model, collision_model)
+    q_start = np.array(
+        [tau / 4, tau / 10, 0, -tau / 7, 0, tau / 5, tau / 8, 0.05, 0.05]
+    )
+    # q_end = get_random_collision_free_state(model, collision_model)
+    q_end = np.array([-tau / 4, tau / 10, 0, -tau / 7, 0, tau / 5, tau / 8, 0.05, 0.05])
 
     # Configure the RRT planner
     options = RRTPlannerOptions(
@@ -83,12 +90,12 @@ if __name__ == "__main__":
                 line_width=1.5,
             )
 
-            input("Press 'Enter' to animate the path.")
-            for q in discretized_path:
-                viz.display(q)
-                time.sleep(0.05)
-
             input("Press 'Enter' to plan another path, or ctrl-c to quit.")
             print()
-            q_start = q_end
-            q_end = get_random_collision_free_state(model, collision_model)
+
+            for q in discretized_path:
+                viz.display(q)
+                time.sleep(0.001)
+
+            # q_start = q_end
+            # q_end = get_random_collision_free_state(model, collision_model)
