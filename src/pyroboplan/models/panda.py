@@ -182,7 +182,7 @@ def setup_my_scene(model, collision_model, visual_model, inflation_radius=0.0):
             coal.Box(*size),
         )
         box.meshColor = (
-            np.array(color) if color is not None else np.array([0.0, 0.0, 1.0, 0.5])
+            np.array(color) if color is not None else np.array([0.3, 0.3, 0.3, 0.8])
         )
         visual_model.addGeometryObject(box)
         collision_model.addGeometryObject(box)
@@ -193,9 +193,11 @@ def setup_my_scene(model, collision_model, visual_model, inflation_radius=0.0):
 
     add_box((0.5, 0.02, 1.0), (0.0, 0.8, 0.5))
     add_box((0.02, 0.4, 0.75), (-0.25 + 0.02 / 2, 0.8 - 0.4 / 2 - 0.02 / 2, 0.375))
-    add_box((0.02, 0.4, 0.75), (0.25 - 0.02 / 2, 0.8 - 0.4 / 2, 0.375))
     add_box(
-        (0.5, 0.4, 0.22), (0.0, 0.8 - 0.4 / 2 - 0.02 / 2, 0.11), (0.0, 0.0, 1.0, 1.0)
+        (0.02, 0.4, 0.75), (0.25 - 0.02 / 2, 0.8 - 0.4 / 2, 0.375), (0.3, 0.3, 0.3, 0.4)
+    )
+    add_box(
+        (0.5, 0.4, 0.22), (0.0, 0.8 - 0.4 / 2 - 0.02 / 2, 0.11), (0.3, 0.3, 0.3, 1.0)
     )
 
     add_box(
